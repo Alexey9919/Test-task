@@ -64,6 +64,13 @@ public class ProductsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+         productsService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
 
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {

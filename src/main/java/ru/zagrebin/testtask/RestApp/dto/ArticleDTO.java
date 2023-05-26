@@ -1,52 +1,30 @@
-package ru.zagrebin.testtask.RestApp.models;
+package ru.zagrebin.testtask.RestApp.dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.stereotype.Component;
+import ru.zagrebin.testtask.RestApp.models.Article;
+import ru.zagrebin.testtask.RestApp.models.Product;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "Article")
-public class Article {
+@Component
+public class ArticleDTO {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
-    //@NotNull
-    @ManyToOne
-    @JoinColumn(name = "productid", referencedColumnName = "id")
     private Product product;
 
     @NotEmpty(message = "Name should not be empty")
-    @Column(name = "name")
     private String name;
 
     @NotEmpty(message = "Content should not be empty")
-    @Column(name = "content")
     private String content;
 
-    @Column(name = "date")
     private Date date;
 
-    public Article() {}
-
-    public Article(Product product, String name, String content, Date date) {
-        this.product = product;
-        this.name = name;
-        this.content = content;
-        this.date = date;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Product getProduct() {
         return product;
@@ -79,7 +57,4 @@ public class Article {
     public void setDate(Date date) {
         this.date = date;
     }
-
 }
-
-
