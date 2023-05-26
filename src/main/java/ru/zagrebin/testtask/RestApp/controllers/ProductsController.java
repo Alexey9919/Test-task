@@ -70,6 +70,13 @@ public class ProductsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@RequestBody ProductDTO productDTO,
+                         @PathVariable("id") int id) {
+
+        productsService.update(id, convertToProduct(productDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
 
     @ExceptionHandler

@@ -68,6 +68,20 @@ public class ArticlesController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+        articlesService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@RequestBody ArticleDTO articleDTO,
+                                             @PathVariable("id") int id) {
+
+        articlesService.update(id, convertToArticle(articleDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {

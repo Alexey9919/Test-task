@@ -22,7 +22,7 @@ public class Product {
     private String name;
 
     @Column(name = "description")
-    @NotEmpty(message = "Email should not be empty")
+    @NotEmpty(message = "Description should not be empty")
     private String description;
 
     @Column(name = "cost")

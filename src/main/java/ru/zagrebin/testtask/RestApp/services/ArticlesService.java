@@ -42,6 +42,17 @@ public class ArticlesService {
         articlesRepository.save(article);
     }
 
+    @Transactional
+    public void delete(int id) {
+        articlesRepository.delete(findOne(id));
+    }
+
+    @Transactional
+    public void update(int id, Article updatedArticle) {
+        updatedArticle.setId(id);
+        articlesRepository.save(updatedArticle);
+    }
+
     private void enrichArticle(Article article) {
         article.setId(article.getId());
     }

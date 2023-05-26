@@ -39,6 +39,12 @@ public class ProductsService {
         productsRepository.delete(findOne(id));
     }
 
+    @Transactional
+    public void update(int id, Product updatedProduct) {
+        updatedProduct.setId(id);
+        productsRepository.save(updatedProduct);
+    }
+
     private void enrichProduct(Product product) {
         product.setId(product.getId());
     }
