@@ -1,6 +1,7 @@
 package ru.zagrebin.testtask.RestApp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zagrebin.testtask.RestApp.models.Product;
@@ -44,6 +45,26 @@ public class ProductsService {
         updatedProduct.setId(id);
         productsRepository.save(updatedProduct);
     }
+
+    /////Методы для сортировки/////
+    @Transactional
+    public List<Product> findAllByName() {
+        List<Product> products = productsRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        return products;
+    }
+
+    @Transactional
+    public List<Product> findAllByDescription() {
+        List<Product> products = productsRepository.findAll(Sort.by(Sort.Direction.ASC, "description"));
+        return products;
+    }
+
+    @Transactional
+    public List<Product> findAllByCost() {
+        List<Product> products = productsRepository.findAll(Sort.by(Sort.Direction.ASC, "cost"));
+        return products;
+    }
+
 
     private void enrichProduct(Product product) {
         product.setId(product.getId());

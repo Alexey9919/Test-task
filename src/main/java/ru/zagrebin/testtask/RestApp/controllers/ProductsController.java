@@ -10,13 +10,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.zagrebin.testtask.RestApp.dto.ProductDTO;
+import ru.zagrebin.testtask.RestApp.models.Article;
 import ru.zagrebin.testtask.RestApp.models.Product;
+import ru.zagrebin.testtask.RestApp.services.ArticlesService;
 import ru.zagrebin.testtask.RestApp.services.ProductsService;
 import ru.zagrebin.testtask.RestApp.util.ErrorResponse;
 import ru.zagrebin.testtask.RestApp.util.NotCreatedException;
 import ru.zagrebin.testtask.RestApp.util.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,11 +27,14 @@ import java.util.stream.Collectors;
 public class ProductsController {
 
     private final ProductsService productsService;
+
+    private final ArticlesService articlesService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ProductsController(ProductsService productsService, ModelMapper modelMapper) {
+    public ProductsController(ProductsService productsService, ArticlesService articlesService, ModelMapper modelMapper) {
         this.productsService = productsService;
+        this.articlesService = articlesService;
         this.modelMapper = modelMapper;
     }
 
@@ -76,6 +82,35 @@ public class ProductsController {
 
         productsService.update(id, convertToProduct(productDTO));
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
+    /////ПОИСК ПО ID/////
+    @GetMapping("/search/{id}")
+    public List<Article> search(@PathVariable("id") int id) {
+        Product product = productsService.findOne(id);
+        return articlesService.search(Optional.ofNullable(product));
+    }
+
+
+
+    /////СОРТИРОВКИ ПО ПОЛЯМ/////
+    @GetMapping("/sort/name")
+    public List<ProductDTO> getProductsByName() {
+        return productsService.findAllByName().stream().map(this::convertToProductDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/sort/description")
+    public List<ProductDTO> getProductsByDescription() {
+        return productsService.findAllByDescription().stream().map(this::convertToProductDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/sort/cost")
+    public List<ProductDTO> getProductsByCost() {
+        return productsService.findAllByCost().stream().map(this::convertToProductDTO)
+                .collect(Collectors.toList());
     }
 
 

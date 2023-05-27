@@ -10,16 +10,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.zagrebin.testtask.RestApp.dto.ArticleDTO;
-import ru.zagrebin.testtask.RestApp.dto.ProductDTO;
 import ru.zagrebin.testtask.RestApp.models.Article;
 import ru.zagrebin.testtask.RestApp.models.Product;
 import ru.zagrebin.testtask.RestApp.services.ArticlesService;
-import ru.zagrebin.testtask.RestApp.services.ProductsService;
 import ru.zagrebin.testtask.RestApp.util.ErrorResponse;
 import ru.zagrebin.testtask.RestApp.util.NotCreatedException;
 import ru.zagrebin.testtask.RestApp.util.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -80,6 +79,37 @@ public class ArticlesController {
 
         articlesService.update(id, convertToArticle(articleDTO));
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{id}")
+    public Optional<Product> search(@PathVariable("id") int id) {
+        return articlesService.searchProduct(id);
+    }
+
+    /////МЕТОДЫ ДЛЯ СОРТИРОВКИ/////
+
+    @GetMapping("/sort/product")
+    public List<ArticleDTO> getArticlesByProduct() {
+        return articlesService.findAllByProduct().stream().map(this::convertToArticleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/sort/name")
+    public List<ArticleDTO> getArticlesByName() {
+        return articlesService.findAllByName().stream().map(this::convertToArticleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/sort/content")
+    public List<ArticleDTO> getArticlesByContent() {
+        return articlesService.findAllByContent().stream().map(this::convertToArticleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/sort/date")
+    public List<ArticleDTO> getArticlesByDate() {
+        return articlesService.findAllByDate().stream().map(this::convertToArticleDTO)
+                .collect(Collectors.toList());
     }
 
 
