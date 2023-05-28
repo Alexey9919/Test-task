@@ -34,47 +34,50 @@ public class ArticlesService {
         this.productsRepository = productsRepository;
     }
 
-    public List<Article> findAll() { return articlesRepository.findAll(); }
+    //Получить все статьи
+    public List<Article> findAll() {
+        return articlesRepository.findAll();
+    }
 
+    //Получить статьи по id
     public Article findOne(int id) {
         Optional<Article> foundArticle = articlesRepository.findById(id);
         return foundArticle.orElseThrow(NotFoundException::new);
     }
 
+    //Сохранить  статью
     @Transactional
     public void save(Article article) {
         enrichArticle(article);
         articlesRepository.save(article);
     }
 
+    //Удалить статью
     @Transactional
     public void delete(int id) {
         articlesRepository.delete(findOne(id));
     }
 
+    //Обновить статью
     @Transactional
     public void update(int id, Article updatedArticle) {
         updatedArticle.setId(id);
         articlesRepository.save(updatedArticle);
     }
 
+    //Поиск статей по продукту
     @Transactional
     public List<Article> search(Optional<Product> product) {
         List<Article> list = articlesRepository.findByProduct(product);
         return list;
     }
 
+    //Поиск продукта по id статьи
     @Transactional
     public Optional<Product> searchProduct(int id) {
-        List<Article> articles = articlesRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-        Article art = null;
-        for(Article article : articles){
-            if(article.getId() == id)
-                art = article;
-        }
+        Article art = findOne(id);
         int idProduct = art.getProduct().getId();
-        Optional<Product> prod = productsRepository.findById(idProduct);
-        return prod;
+        return productsRepository.findById(idProduct);
     }
 
 
@@ -105,6 +108,7 @@ public class ArticlesService {
     }
 
 
+    //Дополнительное заполнение полей в Article
     private void enrichArticle(Article article) {
         article.setId(article.getId());
     }

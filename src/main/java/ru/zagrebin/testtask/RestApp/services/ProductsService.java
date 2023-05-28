@@ -22,24 +22,31 @@ public class ProductsService {
         this.productsRepository = productsRepository;
     }
 
-    public List<Product> findAll() { return productsRepository.findAll(); }
+    //Получить все продукты
+    public List<Product> findAll() {
+        return productsRepository.findAll();
+    }
 
+    //Получить продукт по id
     public Product findOne(int id) {
         Optional<Product> foundProduct = productsRepository.findById(id);
         return foundProduct.orElseThrow(NotFoundException::new);
     }
 
+    //Сохранить продукт
     @Transactional
     public void save(Product product) {
         enrichProduct(product);
         productsRepository.save(product);
     }
 
+    //Удалить продукт
     @Transactional
     public void delete(int id) {
         productsRepository.delete(findOne(id));
     }
 
+    //Обновить продукт
     @Transactional
     public void update(int id, Product updatedProduct) {
         updatedProduct.setId(id);
@@ -65,7 +72,7 @@ public class ProductsService {
         return products;
     }
 
-
+    //Дополнительное заполнение полей в Product
     private void enrichProduct(Product product) {
         product.setId(product.getId());
     }

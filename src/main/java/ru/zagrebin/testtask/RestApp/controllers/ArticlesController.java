@@ -36,17 +36,20 @@ public class ArticlesController {
     }
 
 
+    //Получить все статьи
     @GetMapping()
     public List<ArticleDTO> getArticles() {
         return articlesService.findAll().stream().map(this::convertToArticleDTO)
                 .collect(Collectors.toList());
     }
 
+    //Получить статью по id
     @GetMapping("/{id}")
     public ArticleDTO getArticle(@PathVariable("id") int id) {
         return convertToArticleDTO(articlesService.findOne(id));
     }
 
+    //Создать новую статью
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ArticleDTO articleDTO,
                                              BindingResult bindingResult) {
@@ -63,16 +66,17 @@ public class ArticlesController {
             throw new NotCreatedException(errorMsg.toString());
         }
         articlesService.save(convertToArticle(articleDTO));
-        //отправляем HTTP ответ с пустым телом и со статусом 200
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    //Удалить статью
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
         articlesService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    //Обновить статью
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody ArticleDTO articleDTO,
                                              @PathVariable("id") int id) {
@@ -81,12 +85,15 @@ public class ArticlesController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /////ПОИСК ПРОДУКТА ПО ID СТАТЬИ/////
     @GetMapping("/search/{id}")
     public Optional<Product> search(@PathVariable("id") int id) {
         return articlesService.searchProduct(id);
     }
 
-    /////МЕТОДЫ ДЛЯ СОРТИРОВКИ/////
+
+
+    //////////МЕТОДЫ ДЛЯ СОРТИРОВКИ//////////
 
     @GetMapping("/sort/product")
     public List<ArticleDTO> getArticlesByProduct() {
@@ -113,6 +120,7 @@ public class ArticlesController {
     }
 
 
+    //Обработка Exception
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
         ErrorResponse response = new ErrorResponse(
@@ -133,6 +141,7 @@ public class ArticlesController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    //Конверторы Article <-> ArticleDTO
     private Article convertToArticle(ArticleDTO articleDTO) {
         return modelMapper.map(articleDTO, Article.class);
     }

@@ -15,13 +15,13 @@ import java.util.Date;
 public class ArticleDTO {
 
 
-    private Product product;
-
     @NotEmpty(message = "Name should not be empty")
     private String name;
 
     @NotEmpty(message = "Content should not be empty")
     private String content;
+
+    private Product product;
 
     private Date date;
 

@@ -2,7 +2,6 @@ package ru.zagrebin.testtask.RestApp.controllers;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 public class ProductsController {
 
     private final ProductsService productsService;
-
     private final ArticlesService articlesService;
     private final ModelMapper modelMapper;
 
@@ -38,18 +36,20 @@ public class ProductsController {
         this.modelMapper = modelMapper;
     }
 
-
+    //Получить все продукты
     @GetMapping()
     public List<ProductDTO> getProducts() {
         return productsService.findAll().stream().map(this::convertToProductDTO)
                 .collect(Collectors.toList());
     }
 
+    //Получить продукт по id
     @GetMapping("/{id}")
     public ProductDTO getProduct(@PathVariable("id") int id) {
         return convertToProductDTO(productsService.findOne(id));
     }
 
+    //Создать новый продукт
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ProductDTO productDTO,
                                              BindingResult bindingResult) {
@@ -70,28 +70,29 @@ public class ProductsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    //Удалить продукт
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
-         productsService.delete(id);
+        productsService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    //Обновить продукт
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody ProductDTO productDTO,
-                         @PathVariable("id") int id) {
+                                             @PathVariable("id") int id) {
 
         productsService.update(id, convertToProduct(productDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
-    /////ПОИСК ПО ID/////
+    /////ПОИСК СТАТЬИ ПО ID ПРОДУКТА/////
     @GetMapping("/search/{id}")
     public List<Article> search(@PathVariable("id") int id) {
         Product product = productsService.findOne(id);
         return articlesService.search(Optional.ofNullable(product));
     }
-
 
 
     /////СОРТИРОВКИ ПО ПОЛЯМ/////
@@ -114,6 +115,7 @@ public class ProductsController {
     }
 
 
+    //Обработка Exception
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
         ErrorResponse response = new ErrorResponse(
@@ -134,6 +136,7 @@ public class ProductsController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    //Конверторы Product <-> ProductDTO
     private Product convertToProduct(ProductDTO productDTO) {
         return modelMapper.map(productDTO, Product.class);
     }

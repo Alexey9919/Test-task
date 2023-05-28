@@ -15,7 +15,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //@NotNull
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "productid", referencedColumnName = "id")
     private Product product;
@@ -31,14 +31,6 @@ public class Article {
     @Column(name = "date")
     private Date date;
 
-    public Article() {}
-
-    public Article(Product product, String name, String content, Date date) {
-        this.product = product;
-        this.name = name;
-        this.content = content;
-        this.date = date;
-    }
 
     public Integer getId() {
         return id;

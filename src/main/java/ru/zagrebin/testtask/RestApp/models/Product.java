@@ -14,11 +14,11 @@ public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters")
     private String name;
 
     @Column(name = "description")
@@ -29,20 +29,12 @@ public class Product {
     @Min(value = 0, message = "Cost must be greater than 0")
     private int cost;
 
-    public Product() {}
 
-    public Product(String name, String description, int cost) {
-        this.name = name;
-        this.description = description;
-        this.cost = cost;
-    }
-
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
